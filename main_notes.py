@@ -2,11 +2,15 @@ from PyQt5.QtWidgets import QApplication, QInputDialog, QPushButton,QMessageBox
 from notes_layout1 import *
 import json
 
-
+notes = {
+    "Ласкаво просимо!": {
+         "текст": "Це програма для створення заміток ...",
+         "тегі": ["інструкція", "про програму"]
+    }
+}
 
 with open("notes.json", "r", encoding="utf-8") as file:
    notes = json.load(file)
-notes['текст']=None
 def show_note():
     t = wind.listWidget.currentItem().text()
     wind.textEdit.setText(notes[t]['текст'])
@@ -26,7 +30,7 @@ def save_note():
         return()
     
     text = wind.textEdit.toPlainText()
-    notes[note_name]['текст'] = text
+    notes[note_name] = text
     with open("notes.json", "w", encoding="utf-8") as file:
         json.dump(notes, file)
 
@@ -38,7 +42,7 @@ def del_note():
         print('Обери замітку!')
         return()
     text = wind.textEdit.toPlainText()
-    del notes['текст']
+    del notes[note_name]
     with open("notes.json", "w", encoding="utf-8") as file:
         json.dump(notes, file)
 
