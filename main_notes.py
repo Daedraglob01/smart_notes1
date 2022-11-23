@@ -56,6 +56,8 @@ def del_note():
 
     del notes[note_name]
     wind.listWidget.takeItem(wind.listWidget.currentRow())
+    wind.listWidget_2.clear()
+    wind.textEdit.clear()
     with open("notes.json", "w", encoding="utf-8") as file:
         json.dump(notes, file,sort_keys=True)
 def add_tag():
@@ -69,6 +71,7 @@ def add_tag():
         notes[note_name]["тегі"].append(tag)
         wind.listWidget_2.clear()
         wind.listWidget_2.addItems(notes[note_name]["тегі"])
+    wind.lineEdit.clear()
     with open("notes.json", "w", encoding="utf-8") as file:
         json.dump(notes, file,sort_keys=True)
 def del_tag():
@@ -83,6 +86,26 @@ def del_tag():
     wind.listWidget_2.addItems(notes[note_name]["тегі"])
     with open("notes.json", "w", encoding="utf-8") as file:
         json.dump(notes, file,sort_keys=True)
+
+def search_tag():
+    tag = wind.lineEdit.text()
+    if wind.pushButton_6.text() == "Шукати замітки по тегу" and tag:
+        notes_filtered = {} # тут будуть замітки з виділеним тегом
+        for note in notes:
+            if tag in notes[note]["тегі"]: 
+                notes_filtered[note]=notes[note]
+        wind.pushButton_6.setText("Скинути пошук")
+        wind.listWidget.clear()
+        wind.listWidget_2.clear()
+        wind.listWidget.addItems(notes_filtered)
+    elif wind.pushButton_6.text() == "Скинути пошук":
+        wind.lineEdit.clear()
+        wind.listWidget.clear()
+        wind.listWidget_2.clear()
+        wind.listWidget.addItems(notes)
+        wind.pushButton_6.setText("Шукати замітки по тегу")
+    else:
+        pass
 app = QApplication([])
 
 #print(notes.keys())
@@ -97,4 +120,5 @@ wind.pushButton_3.clicked.connect(save_note)
 wind.pushButton_2.clicked.connect(del_note)
 wind.pushButton_4.clicked.connect(add_tag)
 wind.pushButton_5.clicked.connect(del_tag)
+wind.pushButton_6.clicked.connect(search_tag)
 app.exec_()
